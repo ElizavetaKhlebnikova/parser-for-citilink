@@ -27,10 +27,12 @@ def parse_appliances():
                 (By.CSS_SELECTOR, ".edhylph0.app-catalog-1sl3l2s.e3tyxgd0")
             )
         )
-        item_hrefs = item_grid.find_elements(By.CSS_SELECTOR, "a")
+        # item_hrefs = item_grid.find_elements(By.CSS_SELECTOR, "a")
+        item_hrefs = list(map(lambda x: x.get_attribute("href"), item_grid.find_elements(By.CSS_SELECTOR, "a")))
         for item_href in item_hrefs:
-            url = item_href.get_attribute("href")  # находим url категории
-            driver.get(url)
+            # проходимся по категориям
+            # url = item_href.get_attribute("href")
+            driver.get(item_href)
             try:
                 # переходим в каталог категории
                 products_cards = WebDriverWait(driver, 10).until(
@@ -39,7 +41,9 @@ def parse_appliances():
                     )
                 )
                 # находим все ссылки продуктов в категории
-                products_hrefs = list(map(lambda x: x.get_attribute("href"), products_cards.find_elements(By.CSS_SELECTOR, ".app-catalog-fjtfe3.e1lhaibo0")))
+                products_hrefs = list(map(lambda x: x.get_attribute("href"),
+                                          products_cards.find_elements(By.CSS_SELECTOR,
+                                                                       ".app-catalog-fjtfe3.e1lhaibo0")))
 
                 for product_href in products_hrefs:
                     # переходим по ссылке продукта
